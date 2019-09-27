@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash
 
 if [ $# -ne 10 ] ; then
   echo "Usage: $0 hosterUrl appId login password targetEnvName targetNodeGroup targetPath sourceEnvName sourceNodeGroup sourcePath"
@@ -11,7 +11,7 @@ if [ $# -ne 10 ] ; then
   exit 0
 fi
 
-. common/e2e/helpers.sh
+. helpers.sh
 
 HOSTER_URL=$1
 APPID=$2

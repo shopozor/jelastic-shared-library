@@ -1,11 +1,11 @@
-#!/bin/bash
+#! /bin/bash
 
 if [ $# -lt 5 ] ; then
   echo "Usage: $0 hosterUrl appId login password envName [deploy_group = cp] [path-to-manifest = manifest.jps] [tag = latest]"
   exit 0
 fi
 
-. common/e2e/helpers.sh
+. helpers.sh
 
 HOSTER_URL=$1
 APPID=$2
