@@ -1,7 +1,7 @@
 #! /bin/bash
 
 if [ $# -lt 5 ] ; then
-  echo "Usage: $0 hosterUrl appId login password envName [deploy_group = cp] [path-to-manifest = manifest.jps] [tag = latest]"
+  echo "Usage: $0 hosterUrl appId login password envName [deploy_group = cp] [path-to-manifest = manifest.jps] [tag = latest] [useExistingVolumes = false]"
   exit 0
 fi
 
@@ -15,6 +15,7 @@ ENV_NAME=$5
 DEPLOY_GROUP=${6:-cp}
 MANIFEST=${7:-manifest.jps}
 TAG=${8:-latest}
+USE_EXISTING_VOLUMES=${9:-false}
 
 wasEnvCreated() {
   echo "envName = $2" >&2
@@ -31,13 +32,14 @@ redeployEnvironment() {
   local envName=$2
   local deployGroup=$3
   local tag=$4
+  local useExistingVolumes=$5
   echo "Redeploying group <$deployGroup> of environment <$envName>" >&2
   local cmd=$(curl -k \
     -H "${CONTENT_TYPE}" \
     -A "${USER_AGENT}" \
     -X POST \
     -fsS ${HOSTER_URL}/1.0/environment/control/rest/redeploycontainersbygroup \
-    -d "appid=${APPID}&session=${session}&envName=${envName}&tag=${tag}&nodeGroup=${deployGroup}&useExistingVolumes=true&delay=20")
+    -d "appid=${APPID}&session=${session}&envName=${envName}&tag=${tag}&nodeGroup=${deployGroup}&${useExistingVolumes}=true&delay=20")
   # TODO: when the redeploy has worked, the exitOnFail interprets that as an error
   # exitOnFail $cmd
   echo "Environment redeployed" >&2
@@ -51,7 +53,7 @@ deployToJelastic() {
     installEnv $SESSION "${ENV_NAME}" "$MANIFEST"
   else
     startEnvIfNecessary $SESSION "${ENV_NAME}" "$ENVS"
-    redeployEnvironment $SESSION "${ENV_NAME}" ${DEPLOY_GROUP} ${TAG}
+    redeployEnvironment $SESSION "${ENV_NAME}" ${DEPLOY_GROUP} ${TAG} ${USE_EXISTING_VOLUMES}
   fi
 
   exit 0
