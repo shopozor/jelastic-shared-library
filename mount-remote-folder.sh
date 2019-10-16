@@ -37,7 +37,7 @@ getSourceNodeId() {
   echo $(echo $cmd | jq ".nodes[] | select(.nodeGroup == \"${nodeGroup}\") | .id")
 }
 
-mountTestResults() {
+mountRemoteFolder() {
   # mounts sourceNodeId:/home/node/reports on targetEnvName:$targetPath
   local session=$1
   local targetEnvName=$2
@@ -46,14 +46,14 @@ mountTestResults() {
   local sourcePath=$5
   local readOnly="true"
   local sourceNodeId=$(getSourceNodeId $SESSION ${SOURCE_ENV_NAME} ${SOURCE_NODE_GROUP})
-  echo "Mounting test results..." >&2
+  echo "Mounting remote folder..." >&2
   curl -k \
     -H "${CONTENT_TYPE}" \
     -A "${USER_AGENT}" \
     -X POST \
     -fsS ${HOSTER_URL}/1.0/environment/file/rest/addmountpointbygroup -d "protocol=nfs&path=${targetPath}&envName=${targetEnvName}&session=${session}&sourceNodeId=${sourceNodeId}&readOnly=${readOnly}&nodeGroup=${targetNodeGroup}&sourcePath=${sourcePath}"
-  echo "Test results mounted" >&2 
+  echo "Remote folder mounted" >&2 
   exit 0
 }
 
-mountTestResults $SESSION $TARGET_ENV_NAME $TARGET_NODE_GROUP $TARGET_PATH $SOURCE_PATH
+mountRemoteFolder $SESSION $TARGET_ENV_NAME $TARGET_NODE_GROUP $TARGET_PATH $SOURCE_PATH
