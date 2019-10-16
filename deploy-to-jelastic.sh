@@ -39,7 +39,7 @@ redeployEnvironment() {
     -A "${USER_AGENT}" \
     -X POST \
     -fsS ${HOSTER_URL}/1.0/environment/control/rest/redeploycontainersbygroup \
-    -d "appid=${APPID}&session=${session}&envName=${envName}&tag=${tag}&nodeGroup=${deployGroup}&${useExistingVolumes}=true&delay=20")
+    -d "appid=${APPID}&session=${session}&envName=${envName}&tag=${tag}&nodeGroup=${deployGroup}&useExistingVolumes=${useExistingVolumes}&delay=20")
   # TODO: when the redeploy has worked, the exitOnFail interprets that as an error
   # exitOnFail $cmd
   echo "Environment redeployed" >&2
