@@ -9,10 +9,12 @@ pipeline {
   stages {
     stage('Clean up environments') {
       steps {
-        script = "delete-jelastic-env.sh"
-        sh "chmod u+x $script"
-        sh "$script ${JELASTIC_APP_CREDENTIALS_USR} ${JELASTIC_APP_CREDENTIALS_PSW} ${JELASTIC_CREDENTIALS_USR} ${JELASTIC_CREDENTIALS_PSW} ${BACKEND_NAME_USR}"
-        sh "$script ${JELASTIC_APP_CREDENTIALS_USR} ${JELASTIC_APP_CREDENTIALS_PSW} ${JELASTIC_CREDENTIALS_USR} ${JELASTIC_CREDENTIALS_PSW} ${FRONTEND_NAME_USR}"
+        script {
+          cleanupScript = "delete-jelastic-env.sh"
+          sh "chmod u+x $cleanupScript"
+          sh "$cleanupScript ${JELASTIC_APP_CREDENTIALS_USR} ${JELASTIC_APP_CREDENTIALS_PSW} ${JELASTIC_CREDENTIALS_USR} ${JELASTIC_CREDENTIALS_PSW} ${BACKEND_NAME_USR}"
+          sh "$cleanupScript ${JELASTIC_APP_CREDENTIALS_USR} ${JELASTIC_APP_CREDENTIALS_PSW} ${JELASTIC_CREDENTIALS_USR} ${JELASTIC_CREDENTIALS_PSW} ${FRONTEND_NAME_USR}"
+        }
       }
     }
   }
